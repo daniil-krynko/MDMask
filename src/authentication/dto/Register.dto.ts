@@ -1,7 +1,5 @@
-export class RegisterDto {
-    username: string;
-    password: string;
-    email: string;
-    refreshToken?: string;
-}
+import { CreateUserDto } from "../../users/dto/create-user.dto";
+
+export class RegisterDto extends CreateUserDto {}
+
 export default RegisterDto;

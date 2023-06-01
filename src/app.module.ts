@@ -5,13 +5,15 @@ import { UsersModule } from './users/users.module';
 import { PhotosModule } from './photos/photos.module';
 import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule } from "@nestjs/config";
-import Joi from 'joi';
+import * as Joi from '@hapi/joi';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
     UsersModule,
     PhotosModule,
+    AuthenticationModule,
     MongooseModule.forRoot(process.env.MONGODB_URI),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
