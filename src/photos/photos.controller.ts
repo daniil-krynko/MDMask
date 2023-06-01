@@ -9,26 +9,21 @@ export class PhotosController {
 
   @Post()
   create(@Body() createPhotoDto: CreatePhotoDto) {
-    return this.photosService.create(createPhotoDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.photosService.findAll();
+    return this.photosService.createPhoto(createPhotoDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.photosService.findOne(+id);
+  getPhotoById(@Param('_id') id: string) {
+    return this.photosService.getPhotoById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePhotoDto: UpdatePhotoDto) {
-    return this.photosService.update(+id, updatePhotoDto);
+  updatePhoto(@Param('_id') id: string, @Body() updatePhotoDto: UpdatePhotoDto) {
+    return this.photosService.updatePhoto(id, updatePhotoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.photosService.remove(+id);
+  deletePhoto(@Param('_id') id: string) {
+    return this.photosService.deletePhoto(id);
   }
 }

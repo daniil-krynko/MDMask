@@ -9,23 +9,19 @@ import { User, UserDocument } from "./schema/user.schema";
 export class UsersService {
   constructor(@InjectModel('User') private userModel: Model<UserDocument>) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
-
-  findAll() {
-    return `This action returns all users`;
-  }
-
   async getUserById(id: string): Promise<UserDocument> {
-    return await this.userModel.;
+    return await this.userModel.findById(id).exec();
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
+    return await (await this.userModel.create(createUserDto)).save();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
+      return await (await this.userModel.findByIdAndUpdate(id, updateUserDto).exec()).save();
+  }
+
+  async deleteUser(id: string) {
+      return await this.userModel.findByIdAndDelete({ _id: id }).exec();
   }
 }

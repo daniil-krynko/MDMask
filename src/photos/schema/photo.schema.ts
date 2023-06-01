@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from "mongoose";
 import { HydratedDocument } from "mongoose";
-import { User } from 'src/users/entities/user.entity';
+import { User } from "../../users/schema/user.schema"
 
 export type PhotoDocument = HydratedDocument<Photo>;
 
@@ -14,7 +14,7 @@ export class Photo {
     description: string;
 
     @Prop({ required: true })
-    isSwapped: string;
+    isSwapped: boolean;
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
     userOwner: User;
