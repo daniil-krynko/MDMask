@@ -9,7 +9,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     constructor(private authenticationService: AuthenticationService) {
         super({usernameField:'email'});
     }
-    
+
     //For every strategy, Passport calls the validate function using a set of parameters specific for a particular strategy. 
     //For the local strategy, Passport needs a method with a username and a password. In our case, the email acts as a username.
     async validate(email: string, password: string): Promise<User> {

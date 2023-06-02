@@ -1,13 +1,13 @@
 import { UsersService } from "src/users/users.service";
-import {RegisterDto} from "./dto/Register.dto"
-import { HttpException, HttpStatus} from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable} from '@nestjs/common'
 import { MongoError } from 'mongodb';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from "@nestjs/jwt/dist";
 import { ConfigService } from "@nestjs/config";
 import TokenPayload from "./tokenPayload.interface";
+import CreateUserDto from "src/users/dto/create-user.dto";
 
-
+@Injectable()
 export class AuthenticationService {
     constructor(
         private readonly usersService: UsersService,
@@ -21,15 +21,15 @@ export class AuthenticationService {
         return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
     }
 
-    public async register(registrationData: RegisterDto) {
-        const hashedPassword = await bcrypt.hash(registrationData.password, 10);
+    public async register(createUserDto: CreateUserDto): Promise<any> {
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-        //      We use a try...catch statement here because there is an important case when it might fail. 
-        //      If a user with that email already exists, the  usersService.createUser method throws an error. 
+        //      We use a try...catch statement here because there is an important case when it might fail.
+        //      If a user with that email already exists, the  usersService.createUser method throws an error.
         //      Since our unique column cases it the error comes from Postgres.
         try {
             const createdUser = await this.usersService.createUser({
-                ...registrationData, password: hashedPassword
+                ...createUserDto, password: hashedPassword
             });
             createdUser.password = undefined;
             return createdUser;
@@ -44,26 +44,24 @@ export class AuthenticationService {
         }
     }
 
-    public async getAuthenticatedUser(email:string, hashedPassword: string) {
+    public async getAuthenticatedUser(email:string, plainTextPassword: string) {
         try {
             const user = await this.usersService.getUserByEmail(email);
-            const isPasswordMatching = await bcrypt.compare(
-                hashedPassword, user.password
-            );
-            if (!isPasswordMatching) {
-                throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
-            }
+            await this.verifyPassword(plainTextPassword, user.password);
             user.password = undefined;
             return user;
         } catch (error) {
             throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
         }
-    }   
+    }
 
     private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
-        const isPasswordMatching = await bcrypt.compare(plainTextPassword, hashedPassword);
+        const isPasswordMatching = await bcrypt.compare(
+          plainTextPassword,
+          hashedPassword
+        );
         if (!isPasswordMatching) {
-            throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
+          throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
         }
     }
 

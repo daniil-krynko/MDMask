@@ -10,6 +10,10 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 export class UsersService {
   constructor(@InjectModel('User') private userModel: Model<UserDocument>) {}
 
+  async getUsers(): Promise<UserDocument[]> {
+    return await this.userModel.find().exec();
+  }
+
   async getUserById(id: string): Promise<UserDocument> {
     const user = await this.userModel.findById(id).exec();
     if (user) {
@@ -30,7 +34,7 @@ export class UsersService {
       return await this.userModel.findByIdAndDelete({ _id: id }).exec();
   }
 
-  async getUserByEmail (email: string) {
+  async getUserByEmail (email: string): Promise<UserDocument> {
     const user = await this.userModel.findOne({email}).exec();
     if (user) {
       return user;
