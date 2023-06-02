@@ -4,3 +4,4 @@ export class CreateUserDto {
     email: string;
     refreshToken?: string;
 }
+export default CreateUserDto;
