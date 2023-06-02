@@ -68,4 +68,13 @@ export class AuthenticationService {
     public getCookieForLogout() {
         return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
     }
+
+    public async getUserFromAuthenticationToken(token: string) {
+      const payload: TokenPayload = this.jwtService.verify(token, {
+        secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET')
+      });
+      if (payload.userId) {
+        return this.usersService.getUserById(payload.userId);
+      }
+    }
 }
