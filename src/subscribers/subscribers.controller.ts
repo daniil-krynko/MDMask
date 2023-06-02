@@ -8,7 +8,7 @@ import {
     ClassSerializerInterceptor,
     Inject
 } from '@nestjs/common';
-import { JwtAuthenticationGuard } from "../authentication/jwt-authentication.guard";
+import JwtAuthenticationGuard from "../authentication/jwt-authentication.guard";
 import { CreateSubscriberDto } from "./dto/createSubscriber.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { subscribe } from 'diagnostics_channel';
