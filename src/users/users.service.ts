@@ -27,11 +27,11 @@ export class UsersService {
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
-      return await (await this.userModel.findByIdAndUpdate(id, updateUserDto).exec()).save();
+    return await (await this.userModel.findByIdAndUpdate(id, updateUserDto).exec()).save();
   }
 
   async deleteUser(id: string) {
-      return await this.userModel.findByIdAndDelete({ _id: id }).exec();
+    return await this.userModel.findByIdAndDelete({ _id: id }).exec();
   }
 
   async getUserByEmail (email: string): Promise<UserDocument> {
