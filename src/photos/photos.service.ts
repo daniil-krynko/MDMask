@@ -4,24 +4,26 @@ import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Photo, PhotoDocument } from "./schema/photo.schema";
+import * as path from "path";
+import * as fs from "fs";
+import * as multer from "multer";
 
 @Injectable()
 export class PhotosService {
-  constructor(@InjectModel('Photo') private photoModel: Model<PhotoDocument>) {}
+  constructor(@InjectModel('Photo') private photoModel: Model<PhotoDocument>) { }
 
-  async getPhotoById(id: string): Promise<PhotoDocument> {
-    return await this.photoModel.findById(id).exec();
-  }
+  async savePicture(file: multer.Multer.File): Promise<string> {
+    const pictureName = `${Date.now()}-${file.originalname}`;
+    const picturePath = `dist/images/${pictureName}`;
 
-  async createPhoto(createPhotoDto: CreatePhotoDto): Promise<PhotoDocument> {
-    return await (await this.photoModel.create(createPhotoDto)).save();
-  }
+    // Create the directory if it doesn't exist
+    if (!fs.existsSync('dist/images')) {
+      fs.mkdirSync('dist/images', { recursive: true });
+    }
 
-  async updatePhoto(id: string, updatePhotoDto: UpdatePhotoDto): Promise<PhotoDocument> {
-    return await (await this.photoModel.findByIdAndUpdate(id, updatePhotoDto).exec()).save();
-  }
+    // Save the picture to the specified path
+    fs.writeFileSync(picturePath, file.buffer);
 
-  async deletePhoto(id: string) {
-    return await this.photoModel.findByIdAndDelete({ _id: id }).exec();
+    return picturePath;
   }
 }

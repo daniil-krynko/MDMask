@@ -29,7 +29,7 @@
     "@nestjs/microservices": "^9.4.2",
     "@nestjs/mongoose": "^9.2.2",
     "@nestjs/passport": "^9.0.3",
-    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-express": "^9.4.2",
     "@nestjs/platform-socket.io": "^9.4.2",
     "@nestjs/websockets": "^9.4.2",
     "@types/cookie": "^0.5.1",
